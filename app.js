@@ -1,3 +1,10 @@
+function rms(samples){
+  let sum =0;
+  for (let i =0;i<samples.length;i++){
+    sum+= samples[i]*samples[i]
+  }
+  return Math.sqrt(sum/samples.length);
+}
 async function main() {
   const audioContext = new AudioContext();
   await audioContext.resume();
@@ -13,6 +20,7 @@ async function main() {
     console.log("WebSocket connection established");
     audioNode.port.onmessage = (event) => {
       const chunk = event.data;
+      const energy = rms(chunk);
       const newBuffer = new Float32Array(pcmBuffer.length + chunk.length);
       newBuffer.set(pcmBuffer, 0);
       newBuffer.set(chunk, pcmBuffer.length);
